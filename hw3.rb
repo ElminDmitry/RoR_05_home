@@ -1,106 +1,122 @@
+#номер в списке задач
+require 'pry'
 class Developer
-
-	attr_accessor :tasks
 	
-	def initialize(name)
-		@dev_name = name
-		@MAX_TASKS = 10
-		@tasks = []
-	end
+  def initialize(name)
+    @dev_name = name
+	  @MAX_TASKS = 10
+	  @tasks = []
+  end
 
-	def tasks				
-		@tasks.each {|i| puts "#{@tasks.index(i)+1}. #{i}"}
-	end	
+  def tasks						
+    @tasks.each_with_index.each{|a, i| puts "#{i+1}. #{a}"}    
+    #@tasks.each {|i| puts "#{@tasks.index(i)+1}. #{i}"}		
+  end	
 
-	def status
-		if @tasks.empty?
-			puts "свободен"
-			elsif @tasks.length < @MAX_TASKS
-				puts "работаю"
-			else 
-				puts "занят"
-		end									 
-	end
+  def status
+    case
+    when !can_work?
+    	"свободен"
+    when can_add_task?
+    	"работаю"
+    else
+    	"занят"
+    end
 
-	def add_task(task_name)
-		if @tasks.length < @MAX_TASKS
-			puts "#{@dev_name}: добавлена задача \"#{task_name}\". Всего в списке задач: #{@tasks.length+1}"
-			@tasks.push(task_name)						
-		else 
-			raise(ArgumentError, "Слишком много работы!")
-		end								
-	end
+    #if @tasks.empty?
+	  # "свободен"
+	  #elsif can_add_task?
+	  #  "работаю"
+	  #else 
+	  #  "занят"
+	  #end									 
+  end
 
-	def work!
-		unless @tasks.empty?		 	
-		puts "#{@dev_name}: выполнена задача \"#{@tasks.shift}\". Осталось задач: #{@tasks.length}"
-		else
-			raise(ArgumentError, "Нечего делать!")
-		end
-	end
+  def add_task(task_name)#ловить исключение
+    if @tasks.length < @MAX_TASKS	    
+	    puts %Q{%s: добавлена задача "%s". Всего в списке задач: %i} %
+      [@dev_name, task_name, @tasks.length+1]
+	    @tasks.push(task_name)						
+	  else 
+	    raise("Слишком много работы!")
+	  end								
+  end
 
-	def can_work?
-		@tasks.length == 0 ? false : true		
-	end
+  def work!
+    unless @tasks.empty?
+	    puts %Q{%s: выполнена задача "%s". Осталось задач: %i} %
+      [@dev_name, @tasks.shift, @tasks.length]
+	  else
+	    raise("Нечего делать!")
+	  end
+  end
 
-	def can_add_task?		
-		@tasks.length < @MAX_TASKS ? true : false 
-	end	
+  def can_work?
+    @tasks.length != 0
+  end
+
+  def can_add_task?		
+    @tasks.length < @MAX_TASKS
+  end	
 end
 
 class JuniorDeveloper < Developer	
 	
-	def initialize(name)
-		super		
-		@MAX_TASKS = 5		
-	end
+  def initialize(name)
+    super		
+	  @MAX_TASKS = 5		
+  end
 
-	def add_task(task_name)
-		if task_name.length > 20
-			raise(ArgumentError, "Слишком сложно!")
-		elsif @tasks.length < @MAX_TASKS
-			puts "#{@dev_name}: добавлена задача \"#{task_name}\". Всего в списке задач: #{@tasks.length+1}"
-			@tasks.push(task_name)						
-		else 
-			raise(ArgumentError, "Слишком много работы!")
-		end								
-	end
+  def add_task(task_name)
+    if task_name.length > 20
+	    raise(ArgumentError, "Слишком сложно!")
+	  elsif @tasks.length < @MAX_TASKS
+	    puts %Q{%s: добавлена задача "%s" . Всего в списке задач: %i} %
+      [@dev_name, task_name, @tasks.length+1]
+	    @tasks.push(task_name)						
+	  else 
+	    raise("Слишком много работы!")
+	  end								
+  end
 
-	def work!
-		unless @tasks.empty?		 	
-		puts "#{@dev_name}: пытаюсь делать задачу \"#{@tasks.shift}\". Осталось задач: #{@tasks.length}"
-		else
-			raise(ArgumentError, "Нечего делать!")
-		end
-	end
+  def work!
+    unless @tasks.empty?		 	
+	    puts %Q{%s: пытаюсь делать задачу "%s". Осталось задач: %i} %
+      [@dev_name, @tasks.shift, @tasks.length]
+	  else
+	    raise("Нечего делать!")
+	  end
+  end
 end
 
 class SeniorDeveloper < Developer	
 	
-def initialize(name)
-		super		
-		@MAX_TASKS = 15		
-	end
+  def initialize(name)
+    super		
+	  @MAX_TASKS = 15		
+  end
 
-	def work!
-		unless @tasks.empty?		 	
-		rand_call
-		else
-			raise(ArgumentError, "Нечего делать!")
-		end
-	end
+  def work!
+    unless @tasks.empty?	 	
+	    rand_call
+	  else
+	    raise("Нечего делать!")
+	  end
+  end
 
-	private
-	def rand_call		
-		call = rand(2)	
-		if call == 0
-			if @tasks.length > 1			
-			puts "#{@dev_name}: выполнена задача \"#{@tasks.shift}\" и задача #{@tasks.shift}. Осталось задач: #{@tasks.length}"			
-			else
-				puts "#{@dev_name}: выполнена задача \"#{@tasks.shift}\". Осталось задач: #{@tasks.length}"
-			end
-		else
-			puts "Что-то лень"		
-		end
-	end
+  private
+  def rand_call					
+    if rand(2).even?
+	    if @tasks.length > 1			
+	      puts %Q{%s: выполнена задача "%s" и задача "%s". Осталось задач: %i} %
+        [@dev_name, @tasks.shift, @tasks.shift, @tasks.length]
+	    else
+        puts %Q{%s: выполнена задача "%s" . Осталось задач: %i} %
+        [@dev_name, @tasks.shift, @tasks.length]
+	    end
+	  else
+      puts "Что-то лень"		
+	  end
+  end
 end
+binding.pry
