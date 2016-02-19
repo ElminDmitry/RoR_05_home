@@ -1,5 +1,3 @@
-#номер в списке задач
-require 'pry'
 class Developer
 	
   def initialize(name)
@@ -9,8 +7,7 @@ class Developer
   end
 
   def tasks						
-    @tasks.each_with_index.each{|a, i| puts "#{i+1}. #{a}"}    
-    #@tasks.each {|i| puts "#{@tasks.index(i)+1}. #{i}"}		
+    @tasks.each_with_index.each{|a, i| puts "#{i+1}. #{a}"}    	
   end	
 
   def status
@@ -21,18 +18,10 @@ class Developer
     	"работаю"
     else
     	"занят"
-    end
-
-    #if @tasks.empty?
-	  # "свободен"
-	  #elsif can_add_task?
-	  #  "работаю"
-	  #else 
-	  #  "занят"
-	  #end									 
+    end							 
   end
 
-  def add_task(task_name)#ловить исключение
+  def add_task(task_name)
     if @tasks.length < @MAX_TASKS	    
 	    puts %Q{%s: добавлена задача "%s". Всего в списке задач: %i} %
       [@dev_name, task_name, @tasks.length+1]
@@ -119,4 +108,3 @@ class SeniorDeveloper < Developer
 	  end
   end
 end
-binding.pry
