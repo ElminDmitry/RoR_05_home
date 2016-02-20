@@ -6,8 +6,8 @@ class Developer
 	  @tasks = []
   end
 
-  def tasks						
-    @tasks.each_with_index.each{|a, i| puts "#{i+1}. #{a}"}    	
+  def tasks
+     @tasks.map.each_with_index.each{|a, i| "#{i+1}. #{a}"}  
   end	
 
   def status
@@ -18,11 +18,11 @@ class Developer
     	"работаю"
     else
     	"занят"
-    end							 
+    end    							 
   end
 
   def add_task(task_name)
-    if @tasks.length < @MAX_TASKS	    
+    if can_add_task?	    
 	    puts %Q{%s: добавлена задача "%s". Всего в списке задач: %i} %
       [@dev_name, task_name, @tasks.length+1]
 	    @tasks.push(task_name)						
@@ -32,7 +32,7 @@ class Developer
   end
 
   def work!
-    unless @tasks.empty?
+    if can_work?
 	    puts %Q{%s: выполнена задача "%s". Осталось задач: %i} %
       [@dev_name, @tasks.shift, @tasks.length]
 	  else
@@ -53,13 +53,14 @@ class JuniorDeveloper < Developer
 	
   def initialize(name)
     super		
-	  @MAX_TASKS = 5		
+	  @MAX_TASKS = 5
+
   end
 
   def add_task(task_name)
     if task_name.length > 20
 	    raise(ArgumentError, "Слишком сложно!")
-	  elsif @tasks.length < @MAX_TASKS
+	  elsif can_add_task?
 	    puts %Q{%s: добавлена задача "%s" . Всего в списке задач: %i} %
       [@dev_name, task_name, @tasks.length+1]
 	    @tasks.push(task_name)						
@@ -69,7 +70,7 @@ class JuniorDeveloper < Developer
   end
 
   def work!
-    unless @tasks.empty?		 	
+    if can_work?		 	
 	    puts %Q{%s: пытаюсь делать задачу "%s". Осталось задач: %i} %
       [@dev_name, @tasks.shift, @tasks.length]
 	  else
@@ -78,15 +79,15 @@ class JuniorDeveloper < Developer
   end
 end
 
-class SeniorDeveloper < Developer	
+class SeniorDeveloper < Developer
 	
   def initialize(name)
     super		
-	  @MAX_TASKS = 15		
+	  @MAX_TASKS = 15
   end
 
   def work!
-    unless @tasks.empty?	 	
+    if can_work?	 	
 	    rand_call
 	  else
 	    raise("Нечего делать!")
@@ -100,7 +101,7 @@ class SeniorDeveloper < Developer
 	      puts %Q{%s: выполнена задача "%s" и задача "%s". Осталось задач: %i} %
         [@dev_name, @tasks.shift, @tasks.shift, @tasks.length]
 	    else
-        puts %Q{%s: выполнена задача "%s" . Осталось задач: %i} %
+        puts %Q{%s: выполнена задача "%s". Осталось задач: %i} %
         [@dev_name, @tasks.shift, @tasks.length]
 	    end
 	  else
