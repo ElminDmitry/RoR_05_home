@@ -1,5 +1,6 @@
 class Developer
-  
+  attr_reader :dev_name
+
   def initialize(name)
     @dev_name = name
     @MAX_TASKS = 10
@@ -7,8 +8,13 @@ class Developer
   end
 
   def tasks
-     @tasks.map.each_with_index.each{|a, i| "#{i+1}. #{a}"}  
-  end  
+     #@tasks.map.with_index{|a, i| "#{i+1}. #{a}"}.join("\n")
+     @tasks.map.with_index{|a, i| "#{a}#{i+1}"}.join(", ")
+  end
+
+  def dev_type
+    :developers
+  end
 
   def status
     case
@@ -57,6 +63,10 @@ class JuniorDeveloper < Developer
 
   end
 
+  def dev_type
+    :juniors
+  end
+
   def add_task(task_name)
     if task_name.length > 20
       raise(ArgumentError, "Слишком сложно!")
@@ -84,6 +94,10 @@ class SeniorDeveloper < Developer
   def initialize(name)
     super  
     @MAX_TASKS = 15
+  end
+
+  def dev_type
+    :seniors
   end
 
   def work!
