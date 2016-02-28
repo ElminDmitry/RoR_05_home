@@ -8,8 +8,11 @@ class Developer
   end
 
   def tasks
-     #@tasks.map.with_index{|a, i| "#{i+1}. #{a}"}.join("\n")
-     @tasks.map.with_index{|a, i| "#{a}#{i+1}"}.join(", ")
+     @tasks.map.with_index{|a, i| "#{i+1}. #{a}"}.join("\n")     
+  end
+
+  def tasks_for_team
+    @tasks.map.with_index{|a| "#{a}"}.join(", ")
   end
 
   def dev_type
