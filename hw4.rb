@@ -1,5 +1,4 @@
 require_relative "hw3"
-require 'pry'
 
 class Team
   attr_reader :seniors, :juniors, :developers
@@ -60,16 +59,3 @@ class Team
   end
   
 end
-
-team = Team.new do 
-  have_seniors "Олег", "Оксана"
-  have_developers "Олеся", "Василий", "Богдан"
-  have_juniors "Владислава", "Аркадий", "Рамеш"
-  
-  priority :developers, :juniors , :seniors
-
-  on_task :developer do | dev, task |
-    puts "Отдали задачу #{task} разработчику #{dev.dev_name}, следите за ним!"
-  end
-end
-binding.pry
